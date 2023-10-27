@@ -1,12 +1,9 @@
 // アイコンがclickされたら発火する
 chrome.action.onClicked.addListener(async ({ id }) => {
-  if (!await isGoogleCalendarOpen()) {
-    return;
-  }
-  await chrome.scripting
+  chrome.scripting
     .executeScript({
       target: { tabId: id },
-      func: toggleCheckboxes,
+      func: await isGoogleCalendarOpen() ? toggleCheckboxes : alertWrapper,
     });
 });
 
@@ -21,7 +18,7 @@ const isGoogleCalendarOpen = async () => {
 }
 
 // チェックボックスのON/OFF
-const toggleCheckboxes = async () => {
+const toggleCheckboxes = () => {
   const outer = document.getElementById("tkQpTb");
   const checkboxes = outer.querySelectorAll("input[type='checkbox']");
   for (const checkbox of checkboxes) {
@@ -32,3 +29,6 @@ const toggleCheckboxes = async () => {
     checkbox.checked = !checkbox.checked
   }
 }
+
+// alert
+const alertWrapper = () => alert("Googleカレンダーを開いてね");
