@@ -1,12 +1,19 @@
-document.addEventListener("DOMContentLoaded", () => {
-  chrome.tabs.query({ url: "*://calendar.google.com/*" }, (tabs) => {
-    if (tabs && tabs.length > 0) {
-      // exec...
-    } else {
-      showErrorMsg();
-    }
-  });
+document.addEventListener("DOMContentLoaded", async () => {
+  if (await isGoogleCalendarOpen()) {
+    // exec...
+  } else {
+    showErrorMsg();
+  }
 });
+
+const isGoogleCalendarOpen = async () => {
+  const tab = await chrome.tabs.query({
+    active: true,
+    currentWindow: true
+  });
+  const url = tab[0].url;
+  return url.indexOf("calendar.google.com") !== -1
+}
 
 const showErrorMsg = () => {
   const msgElement = document.createElement("p");
