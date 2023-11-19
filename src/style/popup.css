@@ -1,0 +1,9 @@
+.popup-bg {
+  width: 300px;
+  height: 360px;
+}
+
+.color-inherit {
+  background-color: inherit;
+  color: inherit;
+}
