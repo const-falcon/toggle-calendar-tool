@@ -1,19 +1,27 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  if (await isGoogleCalendarOpen()) {
-    // exec...
+  const tabs = await chrome.tabs.query({
+    active: true,
+    currentWindow: true
+  });
+  const activeTab = tabs[0];
+
+  if (isGoogleCalendarOpen(activeTab)) {
+    injectScriptIntoTab(activeTab);
   } else {
     showErrorMsg();
   }
 });
 
-const isGoogleCalendarOpen = async () => {
-  const tab = await chrome.tabs.query({
-    active: true,
-    currentWindow: true
-  });
-  const url = tab[0].url;
-  return url.indexOf("calendar.google.com") !== -1
+const isGoogleCalendarOpen = (activeTab) => {
+  return activeTab.url.indexOf("calendar.google.com") !== -1
 }
+
+const injectScriptIntoTab = (activeTab) => {
+  chrome.scripting.executeScript({
+    target: { tabId: activeTab.id },
+    files: ["content_script.js"]
+  });
+};
 
 const showErrorMsg = () => {
   const msgElement = document.createElement("p");

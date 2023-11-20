@@ -15,5 +15,11 @@
     "default_title": "Open Google Calendar and click icon!!",
     "default_popup": "src/popup.html"
   },
+  "content_scripts": [
+    {
+      "matches": ["https://calendar.google.com/calendar/*"],
+      "js": ["src/content_script.js"]
+    }
+  ],
   "permissions": ["tabs", "scripting", "activeTab"]
 }
