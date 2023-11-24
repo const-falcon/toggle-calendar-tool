@@ -2,13 +2,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   const activeTab = await getActiveTab();
 
   if (!isGoogleCalendarOpen(activeTab)) {
-    showErrorMsg();
+    showErrorMsg("Please open Google Calendar!!");
     return;
   }
 
-  await wrappedListener();
+  await listenerWrapper();
 
-  const labels = await getLabels(activeTab);
+  await sendMessageWrapper(activeTab, "getLabels");
 });
 
 const getActiveTab = async () => {
@@ -23,14 +23,11 @@ const isGoogleCalendarOpen = (activeTab) => {
   return activeTab.url.indexOf("calendar.google.com") !== -1;
 };
 
-const getLabels = async (activeTab) => {
-  const labels = await chrome.tabs.sendMessage(activeTab.id, {
-    action: "getLabels",
-  });
-  return labels;
+const sendMessageWrapper = async ({ id }, actionName) => {
+  await chrome.tabs.sendMessage(id, { action: actionName });
 };
 
-const wrappedListener = async () => {
+const listenerWrapper = async () => {
   await chrome.runtime.onMessage.addListener((request) => {
     if (request.action === "getLabels") {
       console.log(request.values);
@@ -38,12 +35,8 @@ const wrappedListener = async () => {
   });
 };
 
-const showErrorMsg = () => {
-  const msgElement = document.createElement("p");
-  msgElement.classList.add("color-inherit");
-  const msgText = document.createTextNode("Please open Google Calendar!!");
-  msgElement.appendChild(msgText);
-
-  const parentElement = document.getElementById("popup-bg");
-  parentElement.appendChild(msgElement);
+const showErrorMsg = (msgText) => {
+  const msgElement = document.getElementById("error-msg");
+  const msgTextNode = document.createTextNode(msgText);
+  msgElement.appendChild(msgTextNode);
 };
