@@ -1,34 +1,36 @@
 document.addEventListener("DOMContentLoaded", async () => {
+  const activeTab = await getActiveTab();
+
+  if (!isGoogleCalendarOpen(activeTab)) {
+    showErrorMsg();
+    return;
+  }
+
+  await wrappedListener();
+
+  const labels = await getLabels(activeTab);
+});
+
+const getActiveTab = async () => {
   const tabs = await chrome.tabs.query({
     active: true,
     currentWindow: true
   });
-  const activeTab = tabs[0];
-
-  if (isGoogleCalendarOpen(activeTab)) {
-    await listener();
-    await injectScriptIntoTab(activeTab);
-  } else {
-    showErrorMsg();
-  }
-});
+  return tabs[0];
+}
 
 const isGoogleCalendarOpen = (activeTab) => {
   return activeTab.url.indexOf("calendar.google.com") !== -1
 }
 
-const injectScriptIntoTab = async (activeTab) => {
-  // chrome.scripting.executeScript({
-  //   target: { tabId: activeTab.id },
-  //   files: ["src/content_script.js"]
-  // });
-
+const getLabels = async (activeTab) => {
   const labels = await chrome.tabs.sendMessage(activeTab.id, { action: "getLabels" });
+  return labels;
 };
 
-const listener = async () => {
+const wrappedListener = async () => {
   await chrome.runtime.onMessage.addListener((request) => {
-    if (request.action === "setLabels") {
+    if (request.action === "getLabels") {
       console.log(request.values);
     }
   });
