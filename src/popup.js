@@ -14,17 +14,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 const getActiveTab = async () => {
   const tabs = await chrome.tabs.query({
     active: true,
-    currentWindow: true
+    currentWindow: true,
   });
   return tabs[0];
-}
+};
 
 const isGoogleCalendarOpen = (activeTab) => {
-  return activeTab.url.indexOf("calendar.google.com") !== -1
-}
+  return activeTab.url.indexOf("calendar.google.com") !== -1;
+};
 
 const getLabels = async (activeTab) => {
-  const labels = await chrome.tabs.sendMessage(activeTab.id, { action: "getLabels" });
+  const labels = await chrome.tabs.sendMessage(activeTab.id, {
+    action: "getLabels",
+  });
   return labels;
 };
 
@@ -34,7 +36,7 @@ const wrappedListener = async () => {
       console.log(request.values);
     }
   });
-}
+};
 
 const showErrorMsg = () => {
   const msgElement = document.createElement("p");
@@ -44,4 +46,4 @@ const showErrorMsg = () => {
 
   const parentElement = document.getElementById("popup-bg");
   parentElement.appendChild(msgElement);
-}
+};

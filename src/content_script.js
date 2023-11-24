@@ -10,7 +10,9 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      const labels = labelElements.map((element) => element.firstElementChild.textContent);
+      const labels = labelElements.map(
+        (element) => element.firstElementChild.textContent
+      );
       chrome.runtime.sendMessage({ action: "getLabels", values: labels });
     } else {
       // some exec...
