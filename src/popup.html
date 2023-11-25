@@ -8,11 +8,26 @@
   </head>
 
   <body>
-    <div
-      id="popup-bg"
-      class="popup-bg d-flex justify-content-evenly align-items-center bg-dark text-white"
-    >
-      <p id="error-msg" class="color-inherit"></p>
+    <div id="popup-bg" class="popup-bg d-flex bg-dark text-white p-3">
+      <div id="section1">
+        <article>
+          <p id="error-msg" class="color-inherit"></p>
+        </article>
+      </div>
+      <div id="section2">
+        <article class="mb-3">
+          <label for="group-name">名前:</label>
+          <input
+            type="text"
+            id="group-name"
+            class="form-control-sm"
+            placeholder="名前"
+          />
+          <button type="submit" class="btn btn-primary btn-sm">submit</button>
+        </article>
+        <article class="mb-3">select box area</article>
+        <article class="mb-3">registered groups area</article>
+      </div>
     </div>
     <script src="popup.js"></script>
   </body>

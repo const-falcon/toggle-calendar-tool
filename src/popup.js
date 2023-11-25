@@ -6,6 +6,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
+  hideElement("section1");
+
   await listenerWrapper();
 
   await sendMessageWrapper(activeTab, "getLabels");
@@ -30,7 +32,11 @@ const sendMessageWrapper = async ({ id }, actionName) => {
 const listenerWrapper = async () => {
   await chrome.runtime.onMessage.addListener((request) => {
     if (request.action === "getLabels") {
-      console.log(request.values);
+      if (request.values.length === 0) {
+        showErrorMsg("Failed to retrieve the label :(");
+        return;
+      }
+      // some exec...
     }
   });
 };
@@ -39,4 +45,10 @@ const showErrorMsg = (msgText) => {
   const msgElement = document.getElementById("error-msg");
   const msgTextNode = document.createTextNode(msgText);
   msgElement.appendChild(msgTextNode);
+  hideElement("section2");
+};
+
+const hideElement = (elementId) => {
+  const element = document.getElementById(elementId);
+  element.classList.add("d-none");
 };
